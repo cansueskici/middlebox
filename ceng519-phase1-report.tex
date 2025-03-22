@@ -1,0 +1,87 @@
+\documentclass[10pt,a4paper, margin=1in]{article}
+\usepackage{fullpage}
+\usepackage{amsfonts, amsmath, pifont}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{tkz-euclide}
+\usepackage{titling}
+\usepackage{booktabs}
+\usepackage{comment}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.13}
+
+\setlength{\droptitle}{-7em} 
+\title{CENG519 - Phase 1 Report}
+\author{
+  Cansu Eskici\\
+  2588036}
+\begin{document}
+\maketitle
+\section*{Introduction}
+For this phase, I have implemented a simple processor in Python, and I conducted the experiment with 5 different delay values. 
+In order to have reliable results, each value is obtained from sending the ping packets 50 times. 
+On the X-axis of the chart, the numbers represent the negative power of the exponent for the lambda parameter in the random delay function, as $5e^{-x}$. For example, 3 means $5e^{-3}$, while 4 means $5e^{-4}$.
+
+
+\vspace{1cm}
+
+\begin{minipage}{0.5\textwidth}
+    \begin{tikzpicture}
+        \centering
+        \begin{axis}[
+        %title={ping-delay},
+            xlabel={Mean Value For Random Delay},
+            ylabel={Average RTT},
+            ymin= 0, ymax = 27,
+            ytick = {0,5,10,15,20,25},
+            %gridstyle=dashed,
+            ymajorgrids=true,
+            ]
+        \addplot coordinates {
+          (3,23.250)(4,12.363)(5,12.056)(6,9.645)(7,9.230)
+        };
+      \end{axis}
+    \end{tikzpicture}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+    \begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|}
+        \hline
+        Mean Delay Values & Mean RTT \\
+        \hline
+        ${5e^-3}$ & 23.250 \\
+        ${5e^-4}$ & 12.363 \\
+        ${5e^-5}$ & 12.056 \\
+        ${5e^-6}$ & 9.645 \\
+        ${5e^-7}$ & 9.230 \\
+        \hline
+    \end{tabular}
+    \caption*{Mean Delay Values and Mean RTTs }
+    \label{tab:xy_table}
+\end{table}
+\end{minipage}
+\vspace{0.4cm}
+\section*{Results}
+
+The X values in the chart represent the negative power of the exponent in the random delay function,
+meaning that as the value on the X axis increases, the mean delay actually decreases.
+The table shows the mean delay values and the mean RTTs for each delay value.
+Both the chart and the table show that the mean RTT decreases as the negative power of the exponent increases, or as the mean value for the random delay decreases.
+The relationship between the mean value for random delay and the average RTT is not directly proportional.
+There is a significant drop in average RTT when the negative power is increased from 3 to 4, but after 4, the differences are not as big as that.
+
+
+\section*{Discussion}
+The findings indicate that the average RTT decreases as the mean value for the random delay decreases.
+Shorter delays result in shorter RTT times.
+This is expected since the lower delays are likely to result in quicker packet processing and transmission.
+The non-proportional relationship between the mean value for random delay and the average RTT is probably due to the exponential nature of the random delay function.
+Another indicator of this is the almost indistinguishable differences among the mean RTT values with the lower mean delay values.
+
+ \end{document}
+

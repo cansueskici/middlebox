@@ -95,6 +95,26 @@ services:
     - NATS_SURVEYOR_SERVERS=${NATS_SURVEYOR_SERVERS}
 
 
+  tcp-options-processor:
+    build: ./dockers/tcp-options-processor
+    init: true
+    container_name: tcp-options-processor
+    networks:
+      intnet:
+    command: ['/bin/bash', '/config/configure-processor.sh']
+    volumes:
+    - ./config:/config
+    - ./code/tcp-options-processor:/code/tcp-options-processor
+    environment:
+    - SECURE_NET=${SECURE_NET}
+    - SECURENET_GATEWAY=${SECURENET_GATEWAY}
+    - INSECURE_NET=${INSECURE_NET}
+    - INSECURENET_GATEWAY=${INSECURENET_GATEWAY}
+    - SECURENET_HOST_IP=${SECURENET_HOST_IP}
+    - INSECURENET_HOST_IP=${INSECURENET_HOST_IP}
+    - NATS_SURVEYOR_SERVERS=${NATS_SURVEYOR_SERVERS}
+
+
   insec:
     build: ./dockers/insec
     init: true
