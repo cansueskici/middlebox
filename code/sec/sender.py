@@ -53,13 +53,13 @@ def send_covert_message(dst_ip, dst_port, message, bits, delay):
             if bit == 1:
                 timestamp_value += 2 ** (bits-(index+1))
 
-        print(f"Sending chunk: {chunk} (timestamp: {timestamp_value})")
+        # print(f"Sending chunk: {chunk} (timestamp: {timestamp_value})")
         packet = IP(dst=dst_ip) / TCP(dport=dst_port, flags='PA', options=[("Timestamp", (timestamp_value, 0))])
         send(packet, verbose=0)
         time.sleep(delay)
 
     termination_signal = 0
-    print(f"Sending termination signal: {termination_signal}")
+    # print(f"Sending termination signal: {termination_signal}")
     packet = IP(dst=dst_ip) / TCP(dport=dst_port, flags='PA', options=[("Timestamp", (termination_signal, 0))])
     send(packet, verbose=0)
 
@@ -77,3 +77,4 @@ if __name__ == "__main__":
     dst_port = 1234    
 
     send_covert_message(dst_ip, dst_port, args.msg, args.bits, args.delay)
+

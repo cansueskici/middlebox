@@ -1,9 +1,9 @@
-PWD /Users/ceskici/Desktop/calis köpke/ceng519/workspace
+PWD /Users/ceskici/Desktop/calis köpke/ceng519/workspace/phase1-report
 INPUT /usr/local/texlive/2024/texmf.cnf
 INPUT /usr/local/texlive/2024/texmf-dist/web2c/texmf.cnf
 INPUT /usr/local/texlive/2024/texmf-var/web2c/pdftex/pdflatex.fmt
-INPUT /Users/ceskici/Desktop/calis köpke/ceng519/workspace/ceng519-phase1-report.tex
-OUTPUT /Users/ceskici/Desktop/calis köpke/ceng519/workspace/ceng519-phase1-report.log
+INPUT /Users/ceskici/Desktop/calis köpke/ceng519/workspace/phase1-report/ceng519-phase1-report.tex
+OUTPUT /Users/ceskici/Desktop/calis köpke/ceng519/workspace/phase1-report/ceng519-phase1-report.log
 INPUT /usr/local/texlive/2024/texmf-dist/tex/latex/base/article.cls
 INPUT /usr/local/texlive/2024/texmf-dist/tex/latex/base/article.cls
 INPUT /usr/local/texlive/2024/texmf-dist/tex/latex/base/size10.clo
@@ -387,10 +387,10 @@ INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgfplots/pgfplotsticks.code
 INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgfplots/pgfplots.paths.code.tex
 INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.contourlua.code.tex
 INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.contourlua.code.tex
-INPUT /Users/ceskici/Desktop/calis köpke/ceng519/workspace/ceng519-phase1-report.aux
-INPUT /Users/ceskici/Desktop/calis köpke/ceng519/workspace/ceng519-phase1-report.aux
-INPUT /Users/ceskici/Desktop/calis köpke/ceng519/workspace/ceng519-phase1-report.aux
-OUTPUT /Users/ceskici/Desktop/calis köpke/ceng519/workspace/ceng519-phase1-report.aux
+INPUT /Users/ceskici/Desktop/calis köpke/ceng519/workspace/phase1-report/ceng519-phase1-report.aux
+INPUT /Users/ceskici/Desktop/calis köpke/ceng519/workspace/phase1-report/ceng519-phase1-report.aux
+INPUT /Users/ceskici/Desktop/calis köpke/ceng519/workspace/phase1-report/ceng519-phase1-report.aux
+OUTPUT /Users/ceskici/Desktop/calis köpke/ceng519/workspace/phase1-report/ceng519-phase1-report.aux
 INPUT /usr/local/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT /usr/local/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT /usr/local/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
@@ -436,9 +436,9 @@ INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam5
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm7.tfm
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm5.tfm
-OUTPUT /Users/ceskici/Desktop/calis köpke/ceng519/workspace/ceng519-phase1-report.pdf
+OUTPUT /Users/ceskici/Desktop/calis köpke/ceng519/workspace/phase1-report/ceng519-phase1-report.pdf
 INPUT /usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map
-INPUT /Users/ceskici/Desktop/calis köpke/ceng519/workspace/ceng519-phase1-report.aux
+INPUT /Users/ceskici/Desktop/calis köpke/ceng519/workspace/phase1-report/ceng519-phase1-report.aux
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb

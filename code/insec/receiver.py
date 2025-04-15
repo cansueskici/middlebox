@@ -45,24 +45,21 @@ def process_packet(packet, bits):
         for option in packet[TCP].options:
             if option[0] == "Timestamp":
                 timestamp_value = option[1][0]
-                print(f"Received packet with timestamp: {timestamp_value}")
+                # print(f"Received packet with timestamp: {timestamp_value}")
 
                 if timestamp_value == 0:
-                    print("Termination signal received.")
+                    # print("Termination signal received.")
                     message = decode_bits_to_message(covert_message_bits, bits)
-                    print(f"Decoded message: {message}")
+                    print(message)
                     exit(0)
                 
                 if last_timestamp == None:
                     chunk = [(timestamp_value >> (bits - (i+1))) & 1 for i in range(bits)]
-                    print(f"Chunk: {chunk}")
                     covert_message_bits.extend(chunk)
                     last_timestamp = timestamp_value
                 else:
                     delta = timestamp_value - last_timestamp
-                    print("Delta:", delta)
                     chunk = [(delta >> (bits- (i+1))) & 1 for i in range(bits)]
-                    print(f"Chunk: {chunk}")
                     covert_message_bits.extend(chunk)
                     last_timestamp = timestamp_value
 
@@ -73,14 +70,13 @@ if __name__ == "__main__":
     # start_udp_listener()
 
     parser = argparse.ArgumentParser(description="Covert Receiver using TCP Timestamps")
-    parser.add_argument("--timeout", type=int, default=30,
+    parser.add_argument("--timeout", type=int, default=900,
                         help="Timeout in seconds for sniffing before decoding.")
     parser.add_argument("--bits", type=int, default=8,
                         help="Number of bits encoded per TCP packet.")
     
     args = parser.parse_args()
 
-    print("Starting packet capture...")
     try:
         sniff(iface="eth0", filter="tcp and port 1234", prn=partial(process_packet, bits=args.bits), timeout=args.timeout)
     except Exception as e:
