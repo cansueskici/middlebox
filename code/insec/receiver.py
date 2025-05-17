@@ -4,7 +4,7 @@ from functools import partial
 from scapy.all import TCP, sniff
 
 covert_message_bits = []
-last_timestamp = None
+last_timestamp = 21081527
 
 def start_udp_listener():
     # Create a UDP socket
@@ -52,16 +52,16 @@ def process_packet(packet, bits):
                     message = decode_bits_to_message(covert_message_bits, bits)
                     print(message)
                     exit(0)
-                
-                if last_timestamp == None:
-                    chunk = [(timestamp_value >> (bits - (i+1))) & 1 for i in range(bits)]
-                    covert_message_bits.extend(chunk)
-                    last_timestamp = timestamp_value
+            
+            
+                if last_timestamp == 21081527:
+                    delta = timestamp_value-21081527
                 else:
                     delta = timestamp_value - last_timestamp
-                    chunk = [(delta >> (bits- (i+1))) & 1 for i in range(bits)]
-                    covert_message_bits.extend(chunk)
-                    last_timestamp = timestamp_value
+                
+                chunk = [(delta >> (bits- (i+1))) & 1 for i in range(bits)]
+                covert_message_bits.extend(chunk)
+                last_timestamp = timestamp_value
 
                 break
 

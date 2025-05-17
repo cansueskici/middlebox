@@ -44,7 +44,7 @@ def send_covert_message(dst_ip, dst_port, message, bits, delay):
     bit_stream = encode_message_to_bits(message, bits)
     padding = bits - (len(bit_stream) % bits) if len(bit_stream) % bits != 0 else 0
     bit_stream += [0] * padding
-    timestamp_value = 0
+    timestamp_value = 21081527
 
     for i in range(0, len(bit_stream), bits):
         chunk = bit_stream[i:i + bits]
