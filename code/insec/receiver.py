@@ -25,22 +25,22 @@ def start_udp_listener():
             sent = sock.sendto(data, address)
             print(f"Sent {sent} bytes back to {address}")
 
-
-def decode_bits_to_message(bit_stream, bits):
-    if len(bit_stream) % bits != 0:
-        bit_stream += [0] * (bits - len(bit_stream) % bits) # pad with 0s 
+def decode_bits_to_message(bit_stream):
+    
+    if len(bit_stream) % 8 != 0:
+        bit_stream += [0] * (8 - len(bit_stream) % 8) 
     
     chars = []
-    for i in range(0, len(bit_stream), bits):
-        byte = bit_stream[i:i + bits]
+    for i in range(0, len(bit_stream), 8):
+        byte = bit_stream[i:i + 8]
         char = chr(int(''.join(map(str, byte)), 2))
         chars.append(char)
     return ''.join(chars)
 
 
-def process_packet(packet, bits):
+def process_packet(packet, covert_bits_count):
     global covert_message_bits
-    global last_timestamp
+    
     if TCP in packet and packet[TCP].options:
         for option in packet[TCP].options:
             if option[0] == "Timestamp":
@@ -48,38 +48,38 @@ def process_packet(packet, bits):
                 # print(f"Received packet with timestamp: {timestamp_value}")
 
                 if timestamp_value == 0:
-                    # print("Termination signal received.")
-                    message = decode_bits_to_message(covert_message_bits, bits)
-                    print(message)
+                    # print("\nTermination signal received.")
+                    # message = decode_bits_to_message(covert_message_bits)
+                    # print(f"Decoded Covert Message: {message}")
                     exit(0)
             
-            
-                if last_timestamp == 21081527:
-                    delta = timestamp_value-21081527
-                else:
-                    delta = timestamp_value - last_timestamp
-                
-                chunk = [(delta >> (bits- (i+1))) & 1 for i in range(bits)]
+                extracted_value = timestamp_value & ((1 << covert_bits_count) - 1)
+                chunk_bits_str = format(extracted_value, f'0{covert_bits_count}b')
+                chunk = [int(bit) for bit in chunk_bits_str]
                 covert_message_bits.extend(chunk)
-                last_timestamp = timestamp_value
-
-                break
+                
+                # print(f"Extracted chunk ({covert_bits_count} bits): {chunk}")
+                break 
 
 
 if __name__ == "__main__":
-    # start_udp_listener()
-
     parser = argparse.ArgumentParser(description="Covert Receiver using TCP Timestamps")
     parser.add_argument("--timeout", type=int, default=900,
                         help="Timeout in seconds for sniffing before decoding.")
-    parser.add_argument("--bits", type=int, default=8,
-                        help="Number of bits encoded per TCP packet.")
+    parser.add_argument("--bits", type=int, default=4, 
+                        help="Number of least significant bits used for covert data.")
     
     args = parser.parse_args()
 
     try:
-        sniff(iface="eth0", filter="tcp and port 1234", prn=partial(process_packet, bits=args.bits), timeout=args.timeout)
+        sniff(iface="eth0", filter="tcp and port 1234", prn=partial(process_packet, covert_bits_count=args.bits), timeout=args.timeout)
     except Exception as e:
-        print(f"Error: {e}")
-
-
+        print(f"Error during sniffing: {e}")
+    finally:
+        if covert_message_bits:
+            # print("\nSniffing stopped (timeout or manual stop). Attempting to decode received bits.")
+            # print("Raw covert bits received:", ''.join(map(str, covert_message_bits)))
+            message = decode_bits_to_message(covert_message_bits)
+            print(f"Decoded Covert Message: {message}")
+        else:
+            print("No covert messages received.")

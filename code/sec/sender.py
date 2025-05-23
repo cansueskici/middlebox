@@ -2,8 +2,10 @@ import os
 import socket
 import time
 import argparse
+import random
 from scapy.all import IP, TCP, send
 
+MAX_UINT32 = 0xFFFFFFFF
 
 def udp_sender():
     host = os.getenv('INSECURENET_HOST_IP')
@@ -35,46 +37,54 @@ def udp_sender():
     finally:
         sock.close()
 
-
 def encode_message_to_bits(message, bits):
     bit_stream = ''.join(format(ord(char), f'0{bits}b') for char in message)
     return [int(bit) for bit in bit_stream]
 
-def send_covert_message(dst_ip, dst_port, message, bits, delay):
-    bit_stream = encode_message_to_bits(message, bits)
-    padding = bits - (len(bit_stream) % bits) if len(bit_stream) % bits != 0 else 0
-    bit_stream += [0] * padding
-    timestamp_value = 21081527
+def send_covert_message(message, bits, packet_delay):
+    dst_ip = os.getenv("INSECURENET_HOST_IP")
+    dst_port = 1234 
+    bit_stream = encode_message_to_bits(message, 8) 
 
-    for i in range(0, len(bit_stream), bits):
-        chunk = bit_stream[i:i + bits]
+    padding= (bits - (len(bit_stream) % bits)) % bits
+    padded_message_bits = bit_stream + [0] * padding
 
-        for index, bit in enumerate(chunk):
-            if bit == 1:
-                timestamp_value += 2 ** (bits-(index+1))
+    print(f"Sending covert message: '{message}' with {bits} bits per packet.")
+    # print(f"Total bits to send (including padding): {len(padded_message_bits)}")
 
-        # print(f"Sending chunk: {chunk} (timestamp: {timestamp_value})")
-        packet = IP(dst=dst_ip) / TCP(dport=dst_port, flags='PA', options=[("Timestamp", (timestamp_value, 0))])
+    current_ts_counter = random.randint(0, MAX_UINT32)
+
+    for i in range(0, len(padded_message_bits), bits):
+        chunk = padded_message_bits[i : i + bits]
+        covert_value = int(''.join(map(str, chunk)), 2)
+        current_ts_counter = (current_ts_counter + random.randint(1, 100)) & MAX_UINT32 
+
+        mask = ~((1 << bits) - 1) & MAX_UINT32 
+        modified_tsval = (current_ts_counter & mask) | covert_value
+
+        modified_tsval = modified_tsval & MAX_UINT32
+
+        # print(f"Original TSval (counter): {current_ts_counter} ({bin(current_ts_counter)})")
+        # print(f"Covert chunk: {chunk} ({covert_value})")
+        # print(f"Modified TSval: {modified_tsval} ({bin(modified_tsval)})")
+
+        packet = IP(dst=dst_ip) / TCP(dport=dst_port, flags='PA', options=[("Timestamp", (modified_tsval, 0))])
         send(packet, verbose=0)
-        time.sleep(delay)
+        time.sleep(packet_delay)
 
-    termination_signal = 0
-    # print(f"Sending termination signal: {termination_signal}")
-    packet = IP(dst=dst_ip) / TCP(dport=dst_port, flags='PA', options=[("Timestamp", (termination_signal, 0))])
+    termination_tsval = 0 
+    # print(f"Sending termination signal (TSval: {termination_tsval}).")
+    packet = IP(dst=dst_ip) / TCP(dport=dst_port, flags='PA', options=[("Timestamp", (termination_tsval, 0))])
     send(packet, verbose=0)
 
 
 if __name__ == "__main__":
-    # udp_sender()
-
     parser = argparse.ArgumentParser(description="Covert Sender")
     parser.add_argument("--msg", type=str, default="Hello InsecureNet!")
-    parser.add_argument("--bits", type=int, default=8)
-    parser.add_argument("--delay", type=float, default=0.0)
+    parser.add_argument("--bits", type=int, default=4,
+                        help="Number of least significant bits (LSBs) to use for covert data.")
+    parser.add_argument("--delay", type=float, default=0.01, 
+                        help="Constant delay between sending covert packets (in seconds).")
     args = parser.parse_args()
 
-    dst_ip = os.getenv("INSECURENET_HOST_IP")
-    dst_port = 1234    
-
-    send_covert_message(dst_ip, dst_port, args.msg, args.bits, args.delay)
-
+    send_covert_message(args.msg, args.bits, args.delay)
