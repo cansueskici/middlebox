@@ -49,7 +49,8 @@ def send_covert_message(message, bits, packet_delay):
     padding= (bits - (len(bit_stream) % bits)) % bits
     padded_message_bits = bit_stream + [0] * padding
 
-    print(f"Sending covert message: '{message}' with {bits} bits per packet.")
+    # print(f"Sending covert message: '{message}' with {bits} bits per packet.")
+    print(message)
     # print(f"Total bits to send (including padding): {len(padded_message_bits)}")
 
     current_ts_counter = random.randint(0, MAX_UINT32)

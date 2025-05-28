@@ -54,10 +54,10 @@ def main():
     parser.add_argument("--output", type=str, default="experiment_results.txt")
     args = parser.parse_args()
 
-    bits_options = [7, 8, 16, 25]
+    bits_options = [3, 8, 11, 16]
     msg_options = [
         "Alive 2007, Daft Punk",                                                                                                                        #
-        "Submarine is the second studio album by American indie pop band the Marias.",                                                                  # an ode to the albums i've listened to while working on this project 
+        "Submarine is the second studio album by American indie pop band the Marias.",                                                                # an ode to the albums i've listened to while working on this project 
         "In Rainbows is the seventh studio album by the English rock band Radiohead. The album has 10 songs, making it 42 minutes and 39 seconds long.",#
         "In Korea, heart surgeon. Number one. Steady hand. One day, Kim Jong Un need new heart. I do operation. But mistake! Kim Jong Un die! SSD very mad! I hide fishing boat, come to America. No English, no food, no money. Darryl give me job. Now I have house, American car and new woman. Darryl save life."
     ]
@@ -83,12 +83,17 @@ def main():
                     capacity = compute_capacity(elapsed, total_bits)
                     elapsed_times.append(elapsed)
                     capacities.append(capacity)
-                    
+
                     # print(f"Elapsed time: {elapsed:.4f} s, Capacity: {capacity:.2f} bits/s")
-                    if rec_output.strip() == msg.strip():
-                        print(f"Correct Output: {rec_output}")
+                    if "Decoded Covert Message:" in rec_output:
+                        rec_decoded = rec_output.split("Decoded Covert Message:")[-1].strip()
                     else:
-                        print(f"Incorrect Output: {rec_output}")
+                        rec_decoded = rec_output.strip()
+
+                    if rec_decoded.rstrip('\x00').strip() == msg.strip():
+                        print(f"Correct Output: {rec_decoded}")
+                    else:
+                        print(f"Incorrect Output: {rec_decoded}")
                 if capacities:
                     avg_elapsed = statistics.mean(elapsed_times)
                     avg_capacity = statistics.mean(capacities)

@@ -80,6 +80,6 @@ if __name__ == "__main__":
             # print("\nSniffing stopped (timeout or manual stop). Attempting to decode received bits.")
             # print("Raw covert bits received:", ''.join(map(str, covert_message_bits)))
             message = decode_bits_to_message(covert_message_bits)
-            print(f"Decoded Covert Message: {message}")
+            print(message)
         else:
             print("No covert messages received.")
