@@ -1,89 +1,146 @@
-import asyncio
-from nats.aio.client import Client as NATS
-import os, random
-from scapy.all import Ether, TCP, IP
-import struct
-import time
+import asyncio 
+from nats.aio.client import Client as NATS 
+import os, random 
+from scapy.all import Ether, TCP
+from collections import deque 
+import math 
 
-MAX_UINT32 = 0xFFFFFFFF 
+class CovertChannelDetector: 
+    def __init__(self, entropy_threshold=0.3, min_packets=10): 
+        self.entropy_threshold = entropy_threshold 
+        self.min_packets = min_packets 
+        self.timestamp_buffer = deque(maxlen=1000)  
+        self.packet_count = 0 
+        self.detection_active = False 
 
-class CovertChannelDetector:
-    def __init__(self, bits=8, expected_port=1234):
-        self.bits = bits 
-        self.expected_port = expected_port
-        self.ip_states = {}
-        self.lsb_mask = (1 << self.bits) - 1
-        self.higher_bits_mask = ~self.lsb_mask & MAX_UINT32
+    def calculate_entropy(self, values): 
+        if not values or len(values) < 2: 
+            return 0.0 
 
-    def analyze_packet(self, packet):
-        detected = False
-        if TCP in packet and packet[TCP].dport == self.expected_port and packet[TCP].options:
-            src_ip = packet[IP].src
-            current_packet_time = time.time()
+        freq_map = {} 
+        for val in values: 
+            freq_map[val] = freq_map.get(val, 0) + 1 
 
-            if src_ip not in self.ip_states:
-                self.ip_states[src_ip] = {
-                    'last_tsval': None,
-                    'last_packet_time': current_packet_time,
-                    'consecutive_small_natural_increments': 0
-                }
-            
-            ip_state = self.ip_states[src_ip]
+        total = len(values) 
+        entropy = 0.0 
 
-            for option in packet[TCP].options:
-                if option[0] == "Timestamp":
-                    current_tsval = option[1][0]
+        for count in freq_map.values(): 
+            if count > 0: 
+                prob = count / total 
+                entropy -= prob * math.log2(prob) 
 
-                    if current_tsval == 0:
-                        print(f"\n[Termination Signal Detected!] from {src_ip}.")
-                        if src_ip in self.ip_states:
-                            del self.ip_states[src_ip]
-                        return True 
+        return entropy 
 
-                    if ip_state['last_tsval'] is not None:
-                        # implement detection logic
-                        last_tsval = ip_state['last_tsval']
-                        last_packet_time = ip_state['last_packet_time']
-                    
-                    ip_state['last_tsval'] = current_tsval
-                    ip_state['last_packet_time'] = current_packet_time
-                    break 
-        return detected
+    def extract_lsb_bits(self, timestamps, num_bits): 
+        mask = (1 << num_bits) - 1 
+        return [ts & mask for ts in timestamps]    
 
+    def detect_covert_channel(self, timestamps): 
+        if len(timestamps) < self.min_packets: 
+            return False, 0, "" 
+        
+        entropies = [] 
 
-async def run():
-    nc = NATS()
-    detector = CovertChannelDetector()
-    nats_url = os.getenv("NATS_SURVEYOR_SERVERS", "nats://nats:4222")
-    await nc.connect(nats_url)
+        for bits in range(1, 17): 
+            lsb_values = self.extract_lsb_bits(timestamps, bits) 
+            entropy = self.calculate_entropy(lsb_values) 
+            entropies.append(entropy) 
+    
+        optimal_bits = 1 
+        for i in range(1, len(entropies)): 
+            entropy_increase = entropies[i] - entropies[i-1] 
 
-    async def message_handler(msg):
-        subject = msg.subject
-        data = msg.data #.decode()
-        #print(f"Received a message on '{subject}': {data}")
-        packet = Ether(data)
-        # print(packet.show())
-        detector.analyze_packet(packet)
-        # Publish the received message to outpktsec and outpktinsec
-        delay = random.expovariate(1/5e-6)
-        await asyncio.sleep(delay)
-        if subject == "inpktsec":
-            await nc.publish("outpktinsec", msg.data)
-        else:
-            await nc.publish("outpktsec", msg.data)
-   
-    # Subscribe to inpktsec and inpktinsec topics
-    await nc.subscribe("inpktsec", cb=message_handler)
-    await nc.subscribe("inpktinsec", cb=message_handler)
+            if entropy_increase < self.entropy_threshold: 
+                optimal_bits = i 
+                break 
 
-    print("Subscribed to inpktsec and inpktinsec topics")
+            optimal_bits = i + 1 
 
-    try:
-        while True:
-            await asyncio.sleep(1)
-    except KeyboardInterrupt:
-        print("Disconnecting...")
-        await nc.close()
+        expected_entropy = optimal_bits  
+        actual_entropy = entropies[optimal_bits - 1] 
+        entropy_ratio = actual_entropy / expected_entropy if expected_entropy > 0 else 0 
 
-if __name__ == '__main__':
-    asyncio.run(run())
+        print(f"[DETECTOR] Optimal bits: {optimal_bits}, Entropy ratio: {entropy_ratio:.4f}") 
+
+        is_covert = entropy_ratio < 0.9 and optimal_bits > 1 
+
+        if is_covert: 
+            # print(f"[DETECTOR] COVERT CHANNEL DETECTED!") 
+            print(f"[DETECTOR] Using {optimal_bits} LSB bits")  
+
+        return is_covert, optimal_bits
+
+    def process_packet(self, packet): 
+        if not (TCP in packet and packet[TCP].options): 
+            return 
+
+        for option in packet[TCP].options: 
+            if option[0] == "Timestamp": 
+                tsval = option[1][0]   
+
+                if tsval == 0: 
+                    print(f"[DETECTOR] Termination signal detected (TSval=0)") 
+                    if len(self.timestamp_buffer) >= self.min_packets: 
+                        timestamps = list(self.timestamp_buffer) 
+                        is_covert, bits= self.detect_covert_channel(timestamps) 
+                        if is_covert: 
+                            print(f"[DETECTOR] *** COVERT CHANNEL ALERT ***") 
+
+                    self.timestamp_buffer.clear() 
+                    self.packet_count = 0 
+                    self.detection_active = False 
+                    return 
+
+                self.timestamp_buffer.append(tsval) 
+                self.packet_count += 1 
+                self.detection_active = True 
+
+                if self.packet_count % 50 == 0: 
+                    print(f"[DETECTOR] Collected {self.packet_count} packets with timestamps") 
+                break 
+
+async def run(): 
+    nc = NATS() 
+    nats_url = os.getenv("NATS_SURVEYOR_SERVERS", "nats://nats:4222") 
+    await nc.connect(nats_url) 
+    detector = CovertChannelDetector(entropy_threshold=0.2, min_packets=5) 
+
+    async def message_handler(msg): 
+        subject = msg.subject 
+        data = msg.data 
+
+        try: 
+            packet = Ether(data) 
+            detector.process_packet(packet) 
+            delay = random.expovariate(1/5e-6) 
+            await asyncio.sleep(delay) 
+
+            if subject == "inpktsec": 
+                await nc.publish("outpktinsec", msg.data) 
+            else: 
+                await nc.publish("outpktsec", msg.data) 
+
+        except Exception as e: 
+            print(f"[DETECTOR] Error processing packet: {e}") 
+            if subject == "inpktsec": 
+                await nc.publish("outpktinsec", msg.data) 
+            else: 
+                await nc.publish("outpktsec", msg.data) 
+
+    await nc.subscribe("inpktsec", cb=message_handler) 
+    await nc.subscribe("inpktinsec", cb=message_handler) 
+
+    print("[DETECTOR] Subscribed to inpktsec and inpktinsec topics") 
+    print("[DETECTOR] Monitoring for covert channels in TCP timestamps...") 
+
+    try: 
+        while True: 
+            await asyncio.sleep(1) 
+
+    except KeyboardInterrupt: 
+        print("[DETECTOR] Disconnecting...") 
+        await nc.close() 
+
+if __name__ == '__main__': 
+
+    asyncio.run(run()) 

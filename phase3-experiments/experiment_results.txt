@@ -1,0 +1,147 @@
+Covert Channel Experiment Results (Phase 3)
+==========================================
+
+Config: bits=3, delay=0.01 s, msg_length=21 bytes
+  Avg Elapsed: 3.0185 s, Avg Capacity: 55.66 bits/s, 95% CI: [55.10, 56.22] bits/s
+  Detector Detection Rate: 0.67
+  Correct Detection Rate: 0.00
+Config: bits=3, delay=0.10 s, msg_length=21 bytes
+  Avg Elapsed: 8.4502 s, Avg Capacity: 19.88 bits/s, 95% CI: [19.63, 20.13] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=3, delay=0.01 s, msg_length=75 bytes
+  Avg Elapsed: 9.2504 s, Avg Capacity: 64.87 bits/s, 95% CI: [63.82, 65.92] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=3, delay=0.10 s, msg_length=75 bytes
+  Avg Elapsed: 28.6731 s, Avg Capacity: 20.93 bits/s, 95% CI: [20.84, 21.01] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=3, delay=0.01 s, msg_length=141 bytes
+  Avg Elapsed: 17.1216 s, Avg Capacity: 65.89 bits/s, 95% CI: [64.71, 67.07] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=3, delay=0.10 s, msg_length=141 bytes
+  Avg Elapsed: 53.8479 s, Avg Capacity: 20.95 bits/s, 95% CI: [20.86, 21.03] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=4, delay=0.01 s, msg_length=21 bytes
+  Avg Elapsed: 2.4766 s, Avg Capacity: 67.87 bits/s, 95% CI: [65.64, 70.09] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=4, delay=0.10 s, msg_length=21 bytes
+  Avg Elapsed: 6.4825 s, Avg Capacity: 25.92 bits/s, 95% CI: [25.74, 26.09] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=4, delay=0.01 s, msg_length=75 bytes
+  Avg Elapsed: 7.2919 s, Avg Capacity: 82.29 bits/s, 95% CI: [81.70, 82.87] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=4, delay=0.10 s, msg_length=75 bytes
+  Avg Elapsed: 32.9665 s, Avg Capacity: 20.07 bits/s, 95% CI: [11.00, 29.14] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=4, delay=0.01 s, msg_length=141 bytes
+  Avg Elapsed: 12.9677 s, Avg Capacity: 86.99 bits/s, 95% CI: [86.30, 87.68] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=4, delay=0.10 s, msg_length=141 bytes
+  Avg Elapsed: 40.0828 s, Avg Capacity: 28.14 bits/s, 95% CI: [28.08, 28.21] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=6, delay=0.01 s, msg_length=21 bytes
+  Avg Elapsed: 1.8419 s, Avg Capacity: 91.22 bits/s, 95% CI: [89.40, 93.05] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.67
+Config: bits=6, delay=0.10 s, msg_length=21 bytes
+  Avg Elapsed: 4.4798 s, Avg Capacity: 37.50 bits/s, 95% CI: [37.11, 37.90] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.67
+Config: bits=6, delay=0.01 s, msg_length=75 bytes
+  Avg Elapsed: 4.9160 s, Avg Capacity: 122.08 bits/s, 95% CI: [119.14, 125.03] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.33
+Config: bits=6, delay=0.10 s, msg_length=75 bytes
+  Avg Elapsed: 14.7230 s, Avg Capacity: 40.75 bits/s, 95% CI: [40.61, 40.89] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=6, delay=0.01 s, msg_length=141 bytes
+  Avg Elapsed: 8.9485 s, Avg Capacity: 126.13 bits/s, 95% CI: [121.51, 130.75] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=6, delay=0.10 s, msg_length=141 bytes
+  Avg Elapsed: 27.2624 s, Avg Capacity: 41.38 bits/s, 95% CI: [41.14, 41.61] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=8, delay=0.01 s, msg_length=21 bytes
+  Avg Elapsed: 1.5500 s, Avg Capacity: 108.48 bits/s, 95% CI: [103.60, 113.37] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=8, delay=0.10 s, msg_length=21 bytes
+  Avg Elapsed: 3.5688 s, Avg Capacity: 47.08 bits/s, 95% CI: [46.21, 47.96] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=8, delay=0.01 s, msg_length=75 bytes
+  Avg Elapsed: 3.9486 s, Avg Capacity: 152.03 bits/s, 95% CI: [146.78, 157.29] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=8, delay=0.10 s, msg_length=75 bytes
+  Avg Elapsed: 170.2816 s, Avg Capacity: 36.09 bits/s, 95% CI: [-1.06, 73.23] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=8, delay=0.01 s, msg_length=141 bytes
+  Avg Elapsed: 6.8749 s, Avg Capacity: 164.07 bits/s, 95% CI: [163.55, 164.60] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=8, delay=0.10 s, msg_length=141 bytes
+  Avg Elapsed: 20.4790 s, Avg Capacity: 55.08 bits/s, 95% CI: [54.76, 55.40] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=11, delay=0.01 s, msg_length=21 bytes
+  Avg Elapsed: 1.2842 s, Avg Capacity: 130.88 bits/s, 95% CI: [126.68, 135.08] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=11, delay=0.10 s, msg_length=21 bytes
+  Avg Elapsed: 2.7952 s, Avg Capacity: 60.12 bits/s, 95% CI: [58.49, 61.76] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=11, delay=0.01 s, msg_length=75 bytes
+  Avg Elapsed: 2.9952 s, Avg Capacity: 200.37 bits/s, 95% CI: [195.59, 205.15] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=11, delay=0.10 s, msg_length=75 bytes
+  Avg Elapsed: 8.3106 s, Avg Capacity: 72.20 bits/s, 95% CI: [71.59, 72.81] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=11, delay=0.01 s, msg_length=141 bytes
+  Avg Elapsed: 5.0796 s, Avg Capacity: 222.12 bits/s, 95% CI: [217.11, 227.12] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=11, delay=0.10 s, msg_length=141 bytes
+  Avg Elapsed: 15.1747 s, Avg Capacity: 74.34 bits/s, 95% CI: [73.66, 75.01] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=16, delay=0.01 s, msg_length=21 bytes
+  Avg Elapsed: 1.0563 s, Avg Capacity: 159.21 bits/s, 95% CI: [151.35, 167.08] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=16, delay=0.10 s, msg_length=21 bytes
+  Avg Elapsed: 2.1241 s, Avg Capacity: 79.12 bits/s, 95% CI: [77.17, 81.06] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=16, delay=0.01 s, msg_length=75 bytes
+  Avg Elapsed: 2.2857 s, Avg Capacity: 262.66 bits/s, 95% CI: [252.91, 272.40] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=16, delay=0.10 s, msg_length=75 bytes
+  Avg Elapsed: 6.0351 s, Avg Capacity: 99.42 bits/s, 95% CI: [99.04, 99.80] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=16, delay=0.01 s, msg_length=141 bytes
+  Avg Elapsed: 3.8442 s, Avg Capacity: 293.43 bits/s, 95% CI: [292.81, 294.05] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00
+Config: bits=16, delay=0.10 s, msg_length=141 bytes
+  Avg Elapsed: 10.7214 s, Avg Capacity: 105.22 bits/s, 95% CI: [103.97, 106.46] bits/s
+  Detector Detection Rate: 1.00
+  Correct Detection Rate: 0.00

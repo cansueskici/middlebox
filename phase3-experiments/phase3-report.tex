@@ -1,0 +1,111 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage{fullpage}
+\usepackage{amsfonts, amsmath, pifont}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{tkz-euclide}
+\usepackage{titling}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{comment}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.13}
+
+\setlength{\droptitle}{-7em} 
+\title{CENG519 - Phase 3 Report}
+\author{
+  Cansu Eskici\\
+  2588036}
+\begin{document}
+\maketitle
+\section*{Introduction}
+My choice of covert channel was \textit{Using options fields in TCP headers (such as timestamps) for data hiding.} 
+In this phase, I focused on detecting the covert channel that I implemented in the previous phase.  
+
+The detection mechanism is based on analyzing the TCP header options, specifically the timestamp values.
+ By monitoring the timestamp options in the TCP headers, patterns or anomalies that may indicate the presence of hidden data are identified.
+  The \textit{CovertChannelDetector} class in \textit{tcp-options-processor} implements this detection logic by capturing and inspecting TCP packets for specific timestamp values that correspond to the covert channel's encoding scheme.
+
+\section*{Detection Algorithm}
+The detection algorithm can be summarized in the following steps:
+\begin{enumerate}
+    \item Capture TCP packets from the network interface.
+    \item Extract the TCP header options, focusing on the timestamp values.
+    \item Analyze the timestamp values for patterns or anomalies.
+    \item If a potential covert channel is detected, log the details for further analysis.
+\end{enumerate}
+
+The detector passively observes TCP packets and extracts the timestamp values from the TCP options. 
+It maintains a buffer of timestamp values which gets analyzed after receiving a termination signal (a timestamp value of 0).
+Detection process involves analyzing the entropy of the least significant bits (LSBs) of the timestamp values. 
+For each possible LSB bit, the detector computes the entropy. In a normal scenario, the entropy increases steadily as more bits are considered.
+However, if a covert channel is present, the entropy will plateau or increase less rapidly at the bit width used for hiding data, since those bits are manipulated to encode the hidden message.Detector selects optimal LSB bit by searching for a plateau in the entropy curve, indicating the presence of a covert channel.
+If a plateau is found and the entropy ratio is sufficiently low, the detector logs the timestamp values and the detected bit number, indicating the presence of a covert channel.
+
+By this approach, the detector automatically infers both the presence of a covert channel and the number of bits used for encoding, without prior knowledge of the sender's configuration.
+All detection steps are performed passively, without disrupting the normal flow of network traffic.
+
+\section*{Results}
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{cccccc}
+\toprule
+Bits & Delay (s) & Message Length & Detector Rate & Correct Rate \\
+\midrule
+3  & 0.01 & 21  & 0.67 & 0.00 \\
+3  & 0.10 & 21  & 1.00 & 0.00 \\
+3  & 0.01 & 75  & 1.00 & 0.00 \\
+3  & 0.10 & 75  & 1.00 & 0.00 \\
+3  & 0.01 & 141 & 1.00 & 0.00 \\
+3  & 0.10 & 141 & 1.00 & 0.00 \\
+4  & 0.01 & 21  & 1.00 & 0.00 \\
+4  & 0.10 & 21  & 1.00 & 0.00 \\
+4  & 0.01 & 75  & 1.00 & 0.00 \\
+4  & 0.10 & 75  & 1.00 & 0.00 \\
+4  & 0.01 & 141 & 1.00 & 0.00 \\
+4  & 0.10 & 141 & 1.00 & 0.00 \\
+6  & 0.01 & 21  & 1.00 & 0.67 \\
+6  & 0.10 & 21  & 1.00 & 0.67 \\
+6  & 0.01 & 75  & 1.00 & 0.33 \\
+6  & 0.10 & 75  & 1.00 & 0.00 \\
+6  & 0.01 & 141 & 1.00 & 0.00 \\
+6  & 0.10 & 141 & 1.00 & 0.00 \\
+8  & 0.01 & 21  & 1.00 & 0.00 \\
+8  & 0.10 & 21  & 1.00 & 0.00 \\
+8  & 0.01 & 75  & 1.00 & 0.00 \\
+8  & 0.10 & 75  & 1.00 & 0.00 \\
+8  & 0.01 & 141 & 1.00 & 0.00 \\
+8  & 0.10 & 141 & 1.00 & 0.00 \\
+11 & 0.01 & 21  & 1.00 & 0.00 \\
+11 & 0.10 & 21  & 1.00 & 0.00 \\
+11 & 0.01 & 75  & 1.00 & 0.00 \\
+11 & 0.10 & 75  & 1.00 & 0.00 \\
+11 & 0.01 & 141 & 1.00 & 0.00 \\
+11 & 0.10 & 141 & 1.00 & 0.00 \\
+16 & 0.01 & 21  & 1.00 & 0.00 \\
+16 & 0.10 & 21  & 1.00 & 0.00 \\
+16 & 0.01 & 75  & 1.00 & 0.00 \\
+16 & 0.10 & 75  & 1.00 & 0.00 \\
+16 & 0.01 & 141 & 1.00 & 0.00 \\
+16 & 0.10 & 141 & 1.00 & 0.00 \\
+\bottomrule
+\end{tabular}
+\caption{Detection and correct detection rates for various configurations.}
+\end{table}
+
+
+\section*{Discussion}
+The detector consistently achieves a high detection rate (typically 1.00) across all configurations, meaning it almost always identifies the presence of a covert channel regardless of the number of bits used or the message length. 
+However, the correct detection rate—the rate at which the detector not only detects a covert channel but also correctly infers the actual number of LSBs used for encoding—is almost always 0.00, with only a few exceptions at 6 bits where it reaches up to 0.67. 
+This indicates that while the entropy-based detection mechanism is sensitive to the presence of manipulated timestamp fields, it struggles to accurately determine the exact bit width used for hiding data. 
+Trying all the possible bit widths may be possible but it is not computationally efficient.
+The detector's performance suggests that while it is effective at identifying covert channels, it may require further refinement or additional heuristics to improve its accuracy in determining the specific encoding parameters used by the sender.
+
+
+\end{document}
